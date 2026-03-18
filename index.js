@@ -236,7 +236,17 @@ function init() {
   POSES.forEach(p => {
     const row = document.createElement('div');
     row.className = 'pose-url-row';
-    row.innerHTML = '<span class="pose-url-label">' + p.label.replace(/'/g, '&#39;') + '</span><input class="pose-url-input" type="text" id="url-' + p.id + '" placeholder="https://i.ibb.co/..." oninput="savePoseUrl(\'' + p.id + '\', this.value)">';
+    const lbl = document.createElement('span');
+    lbl.className = 'pose-url-label';
+    lbl.textContent = p.label;
+    const inp = document.createElement('input');
+    inp.className = 'pose-url-input';
+    inp.type = 'text';
+    inp.id = 'url-' + p.id;
+    inp.placeholder = 'https://i.ibb.co/...';
+    inp.addEventListener('input', function() { savePoseUrl(p.id, this.value); });
+    row.appendChild(lbl);
+    row.appendChild(inp);
     container.appendChild(row);
   });
 
@@ -247,7 +257,21 @@ function init() {
     card.className = 'pose-card no-url';
     card.id = 'card-' + p.id;
     card.onclick = () => togglePose(p.id);
-    card.innerHTML = '<div class="pose-card-top"><div class="pose-check" id="check-' + p.id + '"></div><span class="pose-name">' + p.label.replace(/'/g, '&#39;') + '</span></div><div class="pose-desc">' + p.desc.replace(/'/g, '&#39;') + '</div>';
+    const top = document.createElement('div');
+    top.className = 'pose-card-top';
+    const chk = document.createElement('div');
+    chk.className = 'pose-check';
+    chk.id = 'check-' + p.id;
+    const name = document.createElement('span');
+    name.className = 'pose-name';
+    name.textContent = p.label;
+    top.appendChild(chk);
+    top.appendChild(name);
+    const desc = document.createElement('div');
+    desc.className = 'pose-desc';
+    desc.textContent = p.desc;
+    card.appendChild(top);
+    card.appendChild(desc);
     grid.appendChild(card);
   });
 
