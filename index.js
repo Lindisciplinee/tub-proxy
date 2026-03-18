@@ -40,16 +40,16 @@ const COLS = {
 };
 
 const POSES = [
-  { id: "p1",  label: "Portrait buste",         desc: "Légère inclinaison avant, bras naturels, cadrage mi-corps" },
-  { id: "p2",  label: "Marche plein corps",      desc: "Avancée vers la caméra, mouvement naturel, plein corps" },
-  { id: "p3",  label: "3/4 face déhanchée",      desc: "Poids sur une hanche, légère rotation, bras relâchés" },
-  { id: "p4",  label: "Frontale catalog",        desc: "Droite, pieds joints, bras le long du corps, classique" },
-  { id: "p5",  label: "Frontale col mis en avant", desc: "Jambes légèrement écartées, col et haut valorisés" },
-  { id: "p6",  label: "Frontale un pied devant", desc: "Légère marche, un pied en avant, naturelle et vivante" },
-  { id: "p7",  label: "Pop de hanche",           desc: "Hanche marquée sur le côté, regard direct caméra" },
-  { id: "p8",  label: "Jambes croisées",         desc: "Une jambe croisée devant l'autre, décontractée" },
-  { id: "p9",  label: "Portrait rapproché",      desc: "Épaules basses, cadrage buste, regard proche" },
-  { id: "p10", label: "3/4 côté micro-geste",    desc: "Vue 3/4 de côté, tient légèrement le tissu de la robe d'une main" }
+  { id: "p1",  label: "Portrait buste",          desc: "Légère inclinaison avant, bras naturels, cadrage mi-corps",    url: "https://i.ibb.co/Rp45q7PK/Capture-d-cran-2025-07-12-09-23-58.png" },
+  { id: "p2",  label: "Marche plein corps",       desc: "Avancée vers la caméra, mouvement naturel, plein corps",       url: "https://i.ibb.co/k2s3N9p6/Capture-d-cran-2025-07-12-09-24-07.png" },
+  { id: "p3",  label: "3/4 face déhanchée",       desc: "Poids sur une hanche, légère rotation, bras relâchés",         url: "https://i.ibb.co/mCFz2RxM/Capture-d-cran-2025-07-12-09-24-20.png" },
+  { id: "p4",  label: "Frontale catalog",         desc: "Droite, pieds joints, bras le long du corps, classique",       url: "https://i.ibb.co/d033DML8/Capture-d-cran-2025-07-12-09-24-16.png" },
+  { id: "p5",  label: "Frontale col mis en avant", desc: "Jambes légèrement écartées, col et haut valorisés",           url: "https://i.ibb.co/qMN3b4Y9/Capture-d-cran-2025-07-12-09-24-40.png" },
+  { id: "p6",  label: "Frontale un pied devant",  desc: "Légère marche, un pied en avant, naturelle et vivante",        url: "https://i.ibb.co/Z6VXjVtL/Capture-d-cran-2025-07-12-09-24-46.png" },
+  { id: "p7",  label: "Pop de hanche",            desc: "Hanche marquée sur le côté, regard direct caméra",             url: "https://i.ibb.co/XxyKQvfM/pose1.png" },
+  { id: "p8",  label: "Jambes croisées",          desc: "Une jambe croisée devant l'autre, décontractée",               url: "https://i.ibb.co/bRF52DkH/Capture-d-cran-2025-07-12-09-25-01.png" },
+  { id: "p9",  label: "Mains sur les hanches",    desc: "Mains sur les hanches, posture assurée, regard caméra",        url: "https://i.ibb.co/XxH5CwKm/The-New-Black-60.jpg" },
+  { id: "p10", label: "3/4 micro-geste",          desc: "Vue 3/4 de côté, tient légèrement le tissu de la robe",        url: "" }
 ];
 
 app.post("/proxy", async (req, res) => {
@@ -275,13 +275,14 @@ function init() {
     grid.appendChild(card);
   });
 
-  // Load saved urls from localStorage
+  // Pre-fill from POSES default urls, override with localStorage
   POSES.forEach(p => {
     const saved = localStorage.getItem('poseUrl_' + p.id);
-    if (saved) {
-      poseUrls[p.id] = saved;
+    const url = saved || p.url || '';
+    if (url) {
+      poseUrls[p.id] = url;
       const input = document.getElementById('url-' + p.id);
-      if (input) input.value = saved;
+      if (input) input.value = url;
       document.getElementById('card-' + p.id).classList.remove('no-url');
     }
   });
