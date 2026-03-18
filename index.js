@@ -62,7 +62,7 @@ app.post("/proxy", async (req, res) => {
   try {
     const r = await fetch(`https://thenewblack.ai/api/1.1/wf/${endpoint}?api_key=${api_key}`, { method: "POST", body: fd });
     const txt = await r.text();
-    res.status(r.status).send(txt.replace(/\r?\n/g, "").trim());
+    res.status(r.status).send(txt.split("\n").join("").split("\r").join( "").trim());
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
@@ -224,7 +224,7 @@ function addLog(m){const b=document.getElementById('lb');b.style.display='block'
 function showErr(m){const b=document.getElementById('eb');b.textContent=m;b.style.display='block';}
 function setStep(i){for(let j=0;j<4;j++){const d=document.getElementById('d'+j),l=document.getElementById('l'+j);d.className='sd'+(j<i?' done':j===i?' active':'');d.textContent=j<i?'v':j+1;l.className='sl'+(j===i?' active':'');}}
 function toB64(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(f);});}
-async function callProxy(ep,fields){const r=await fetch('/proxy?endpoint='+ep,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(fields)});const txt=await r.text();if(!r.ok)throw new Error('Erreur '+ep+' ('+r.status+'): '+txt.slice(0,300));const t=txt.replace(/\r?\n/g,'').trim();if(t.startsWith('http'))return t;try{const d=JSON.parse(t);return d.image||d.url||d.output||d.result||Object.values(d).find(v=>typeof v==='string'&&v.startsWith('http'));}catch{throw new Error('Réponse: '+t.slice(0,300));}}
+async function callProxy(ep,fields){const r=await fetch('/proxy?endpoint='+ep,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(fields)});const txt=await r.text();if(!r.ok)throw new Error('Erreur '+ep+' ('+r.status+'): '+txt.slice(0,300));const t=txt.split("\n").join("").split("\r").join('').trim();if(t.startsWith('http'))return t;try{const d=JSON.parse(t);return d.image||d.url||d.output||d.result||Object.values(d).find(v=>typeof v==='string'&&v.startsWith('http'));}catch{throw new Error('Réponse: '+t.slice(0,300));}}
 async function uploadImgbb(b64,key){const r=await fetch('/imgbb?key='+key,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:b64})});const d=await r.json();if(!d.success)throw new Error('imgbb: '+(d.error?.message||JSON.stringify(d)));return d.data.url;}
 async function run(){
   document.getElementById('eb').style.display='none';
@@ -405,7 +405,7 @@ function addLog(m){const b=document.getElementById('lb');b.style.display='block'
 function showErr(m){document.getElementById('eb').textContent=m;document.getElementById('eb').style.display='block';}
 function toB64(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(f);});}
 async function uploadImgbb(b64,key){const r=await fetch('/imgbb?key='+key,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:b64})});const d=await r.json();if(!d.success)throw new Error('imgbb: '+(d.error?.message||JSON.stringify(d)));return d.data.url;}
-async function callEdit(imageUrl,prompt,key){const r=await fetch('/proxy?endpoint=edit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({api_key:key,image:imageUrl,prompt})});const txt=await r.text();if(!r.ok)throw new Error('edit ('+r.status+'): '+txt.slice(0,200));const t=txt.replace(/\r?\n/g,'').trim();if(t.startsWith('http'))return t;try{const d=JSON.parse(t);return d.image||d.url||d.output||d.result||Object.values(d).find(v=>typeof v==='string'&&v.startsWith('http'));}catch{throw new Error('Réponse: '+t.slice(0,200));}}
+async function callEdit(imageUrl,prompt,key){const r=await fetch('/proxy?endpoint=edit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({api_key:key,image:imageUrl,prompt})});const txt=await r.text();if(!r.ok)throw new Error('edit ('+r.status+'): '+txt.slice(0,200));const t=txt.split("\n").join("").split("\r").join('').trim();if(t.startsWith('http'))return t;try{const d=JSON.parse(t);return d.image||d.url||d.output||d.result||Object.values(d).find(v=>typeof v==='string'&&v.startsWith('http'));}catch{throw new Error('Réponse: '+t.slice(0,200));}}
 async function run(){
   document.getElementById('eb').style.display='none';
   document.getElementById('lb').style.display='none';
