@@ -399,13 +399,19 @@ function toB64(f) {
 async function callProxy(ep, fields) {
   const r = await fetch('/proxy?endpoint=' + ep, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(fields) });
   const txt = await r.text();
+  console.log('[' + ep + '] raw response:', JSON.stringify(txt));
   if (!r.ok) throw new Error('Erreur ' + ep + ' (' + r.status + '): ' + txt.slice(0, 200));
-  const t = txt.trim();
+  const t = txt.replace(/\r?\n/g, '').trim();
   if (t.startsWith('http')) return t;
   try {
     const d = JSON.parse(t);
-    return d.image || d.url || d.output || d.result || Object.values(d).find(v => typeof v === 'string' && v.startsWith('http'));
-  } catch { throw new Error('Réponse inattendue: ' + t.slice(0, 200)); }
+    const url = d.image || d.url || d.output || d.result || Object.values(d).find(v => typeof v === 'string' && v.startsWith('http'));
+    console.log('[' + ep + '] parsed url:', url);
+    return url;
+  } catch {
+    console.log('[' + ep + '] parse failed, raw:', t);
+    throw new Error('Réponse inattendue: ' + t.slice(0, 200));
+  }
 }
 
 async function uploadImgbb(b64, key) {
