@@ -236,7 +236,7 @@ function init() {
   POSES.forEach(p => {
     const row = document.createElement('div');
     row.className = 'pose-url-row';
-    row.innerHTML = '<span class="pose-url-label">' + p.label + '</span><input class="pose-url-input" type="text" id="url-' + p.id + '" placeholder="https://i.ibb.co/..." oninput="savePoseUrl(\'' + p.id + '\', this.value)">';
+    row.innerHTML = '<span class="pose-url-label">' + p.label.replace(/'/g, '&#39;') + '</span><input class="pose-url-input" type="text" id="url-' + p.id + '" placeholder="https://i.ibb.co/..." oninput="savePoseUrl(\'' + p.id + '\', this.value)">';
     container.appendChild(row);
   });
 
@@ -247,7 +247,7 @@ function init() {
     card.className = 'pose-card no-url';
     card.id = 'card-' + p.id;
     card.onclick = () => togglePose(p.id);
-    card.innerHTML = '<div class="pose-card-top"><div class="pose-check" id="check-' + p.id + '"></div><span class="pose-name">' + p.label + '</span></div><div class="pose-desc">' + p.desc + '</div>';
+    card.innerHTML = '<div class="pose-card-top"><div class="pose-check" id="check-' + p.id + '"></div><span class="pose-name">' + p.label.replace(/'/g, '&#39;') + '</span></div><div class="pose-desc">' + p.desc.replace(/'/g, '&#39;') + '</div>';
     grid.appendChild(card);
   });
 
