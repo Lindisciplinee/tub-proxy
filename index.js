@@ -8,29 +8,24 @@ app.use(express.json({ limit: "20mb" }));
 
 const COLS = {
   "Floraison": {
-    bg_prompt: "real garden terrace, late afternoon dappled light through leaves casting uneven shadows on stone ground, slightly overexposed background, wild wisteria with some dried flowers, worn wooden bench partially visible, natural imperfections, shot on 85mm f1.8 with soft bokeh, muted pastel tones, slight film grain, no perfect symmetry. Match soft diffused natural light on subject, gentle shadow under chin and arms, no harsh edge, warm skin tones",
-    bg_negative: "people, text, logo, studio, fake, overly saturated, perfect lighting, stock photo, CGI, too clean",
-    vto_prompt: "elegant plus-size woman wearing the outfit, soft feminine pose, fashion editorial"
+    bg_url: "https://i.ibb.co/qF3y2k6D/floraison.png",
+    vto_prompt: "elegant plus-size woman wearing the outfit, soft feminine pose, fashion editorial, photorealistic"
   },
   "Mineral": {
-    bg_prompt: "authentic Mediterranean stone terrace at dusk, warm raking light casting long directional shadows across worn limestone floor, aged stone balustrade with moss and weathering, olive tree with natural asymmetric branches, real dust and texture on stone, slightly underexposed sky with natural gradient, shot on 50mm, subtle lens flare, muted earthy palette. Match warm golden directional light on subject, strong shadow on one side, warm orange-golden skin tone cast",
-    bg_negative: "people, text, logo, perfect stone, CGI, overly bright, stock photo, fake sky, too saturated",
-    vto_prompt: "elegant plus-size woman wearing the outfit, natural confident pose, fashion editorial"
+    bg_url: "https://i.ibb.co/fYwLGvC5/mineral.png",
+    vto_prompt: "elegant plus-size woman wearing the outfit, natural confident pose, fashion editorial, photorealistic"
   },
   "Audace": {
-    bg_prompt: "real Parisian rooftop at magic hour, slightly hazy orange sky, zinc rooftop with dirt and scratches, chimney stacks out of focus, uneven warm light with hard shadows on rooftop surface, handheld feeling, slight chromatic aberration, gritty editorial atmosphere, shot on 35mm. Match harsh directional golden light on subject, strong shadow on one side of face and body, warm orange skin tone",
-    bg_negative: "people, text, logo, perfect sky, CGI, too clean, overly saturated, stock photo, fake",
-    vto_prompt: "confident plus-size woman wearing the outfit, strong editorial pose, fashion photography"
+    bg_url: "https://i.ibb.co/6RKvgNH9/audace.png",
+    vto_prompt: "confident plus-size woman wearing the outfit, strong editorial pose, fashion photography, photorealistic"
   },
   "Crepuscule": {
-    bg_prompt: "real outdoor terrace at twilight, deep purple-blue sky with last traces of orange on horizon, imperfect string lights partially visible and slightly blurred, worn terrace floor with real texture, potted plants casting long dark shadows, moody underexposed atmosphere, natural vignetting, shot on 50mm f2, low light grain visible. Match low moody ambient light on subject, cool purple tones with warm orange backlight rim, deep soft shadows",
-    bg_negative: "people, text, logo, perfect lighting, CGI, overly bright, stock photo, fake, neon",
-    vto_prompt: "elegant plus-size woman wearing the outfit, moody editorial pose, fashion photography"
+    bg_url: "https://i.ibb.co/xKHLX1K0/The-New-Black-52.png",
+    vto_prompt: "elegant plus-size woman wearing the outfit, moody editorial pose, fashion photography, photorealistic"
   },
   "Riviera": {
-    bg_prompt: "authentic Mediterranean coastal village, midday sun creating harsh real shadows on whitewashed wall with peeling paint, irregular stone path, real sea visible with slight haze in distance, sun bleached colors, heat shimmer in background, natural imperfect composition, shot on 35mm with slight overexposure on bright surfaces, a real village not a resort. Match harsh midday overhead sun on subject, hard shadow under nose and arms, slight overexposed highlights, warm skin",
-    bg_negative: "people, text, logo, perfect resort, CGI, overly turquoise, stock photo, fake, too saturated, luxury hotel",
-    vto_prompt: "radiant plus-size woman wearing the outfit, relaxed summery pose, fashion editorial"
+    bg_url: "https://i.ibb.co/0RyLcjRw/Design-sans-titre-157.png",
+    vto_prompt: "radiant plus-size woman wearing the outfit, relaxed summery pose, fashion editorial, photorealistic"
   }
 };
 
@@ -92,6 +87,7 @@ function getHTML() {
   h.push('.divt{border-top:2px solid #F02B8C;padding-top:14px;margin-top:4px}');
   h.push('.ib{padding:10px 14px;background:#e8f4fd;border-radius:8px;font-size:12px;color:#2980b9;line-height:1.6}');
   h.push('.sb{padding:12px 14px;background:#f8f8f6;border-radius:8px;border:1px solid #eee;margin-bottom:12px}');
+  h.push('.bg-preview{width:100%;height:80px;object-fit:cover;border-radius:8px;display:block;border:1px solid #eee;margin-top:8px}');
   h.push('</style></head><body><div class="app">');
   h.push('<div><h1>Pipeline visuel</h1><span class="brand">L indisciplinee</span></div>');
   h.push('<div class="tabs"><button class="tab active" onclick="showTab(\'p\')">Pipeline</button><button class="tab" onclick="showTab(\'s\')">Parametres</button></div>');
@@ -99,17 +95,18 @@ function getHTML() {
   h.push('<div id="ts" style="display:none">');
   h.push('<div class="sb"><label class="fl">Cle API The New Black</label><input type="text" id="s-tnb" value="W9ILG0UKP2J35XAO1U6OPAR9VTLDC4"></div>');
   h.push('<div class="sb"><label class="fl">Cle API imgbb</label><input type="text" id="s-imgbb" placeholder="Gratuite sur imgbb.com"><p class="hint">imgbb.com - API - copie ta cle</p></div>');
-  h.push('<div class="ib">2 credits TNB par article : 1 try-on + 1 decor.</div>');
+  h.push('<div class="ib">2 credits TNB par article : 1 try-on + 1 integration fond.</div>');
   h.push('</div>');
 
   h.push('<div id="tp">');
-  h.push('<div class="row"><div><label class="fl">Collection</label><select id="col" onchange="document.getElementById(\'btnr\').textContent=\'Lancer \'+this.value"><option>Floraison</option><option>Mineral</option><option>Audace</option><option>Crepuscule</option><option>Riviera</option></select></div>');
+  h.push('<div class="row"><div><label class="fl">Collection</label><select id="col" onchange="onColChange(this.value)"><option>Floraison</option><option>Mineral</option><option>Audace</option><option>Crepuscule</option><option>Riviera</option></select></div>');
   h.push('<div><label class="fl">Ratio</label><select id="rat"><option>9:16</option><option>3:4</option><option>1:1</option><option>4:3</option><option>auto</option></select></div></div>');
+  h.push('<div class="field"><label class="fl">Fond de collection</label><img id="bg-preview" class="bg-preview" src="https://i.ibb.co/qF3y2k6D/floraison.png" alt="fond"></div>');
   h.push('<div class="field"><label class="fl">Photo modele (ta pose)</label><input type="text" id="mu" placeholder="URL publique de ta photo hebergee"></div>');
   h.push('<div class="field"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px"><label class="fl" style="margin:0">Vetement sur cintre</label><button class="tog" id="tog" onclick="toggleMode()">Coller une URL</button></div>');
   h.push('<div id="dz" class="dz" onclick="document.getElementById(\'fi\').click()" ondrop="handleDrop(event)" ondragover="event.preventDefault()"><div style="text-align:center;padding:2rem"><div style="font-size:28px;color:#ccc;margin-bottom:8px">+</div><p style="font-size:13px;color:#888">Photo cintre</p><p style="font-size:11px;color:#bbb;margin-top:3px">JPG PNG - depose ou clique</p></div></div>');
   h.push('<input type="text" id="gu" placeholder="URL du vetement" style="display:none"><input type="file" id="fi" accept="image/*" style="display:none" onchange="handleFile(this.files[0])"></div>');
-  h.push('<div class="steps"><div class="si"><div class="sd" id="d0">1</div><span class="sl" id="l0">Upload</span><div class="sline"></div></div><div class="si"><div class="sd" id="d1">2</div><span class="sl" id="l1">Try-on</span><div class="sline"></div></div><div class="si"><div class="sd" id="d2">3</div><span class="sl" id="l2">Decor</span><div class="sline"></div></div><div class="si"><div class="sd" id="d3">4</div><span class="sl" id="l3">Resultat</span></div></div>');
+  h.push('<div class="steps"><div class="si"><div class="sd" id="d0">1</div><span class="sl" id="l0">Upload</span><div class="sline"></div></div><div class="si"><div class="sd" id="d1">2</div><span class="sl" id="l1">Try-on</span><div class="sline"></div></div><div class="si"><div class="sd" id="d2">3</div><span class="sl" id="l2">Fond</span><div class="sline"></div></div><div class="si"><div class="sd" id="d3">4</div><span class="sl" id="l3">Resultat</span></div></div>');
   h.push('<button class="btn" id="btnr" onclick="run()">Lancer Floraison</button>');
   h.push('<div id="eb" class="err" style="display:none"></div>');
   h.push('<div id="lb" class="log" style="display:none"></div>');
@@ -120,6 +117,7 @@ function getHTML() {
   h.push('<script>');
   h.push('var useUrl=false,gFile=null;');
   h.push('var COLS=' + colsJson + ';');
+  h.push('function onColChange(v){document.getElementById("bg-preview").src=COLS[v].bg_url;document.getElementById("btnr").textContent="Lancer "+v;}');
   h.push('function showTab(t){document.getElementById("tp").style.display=t==="p"?"block":"none";document.getElementById("ts").style.display=t==="s"?"block":"none";document.querySelectorAll(".tab").forEach(function(el,i){el.classList.toggle("active",(i===0&&t==="p")||(i===1&&t==="s"));});}');
   h.push('function toggleMode(){useUrl=!useUrl;document.getElementById("dz").style.display=useUrl?"none":"flex";document.getElementById("gu").style.display=useUrl?"block":"none";document.getElementById("tog").textContent=useUrl?"Uploader un fichier":"Coller une URL";}');
   h.push('function handleFile(f){if(!f)return;gFile=f;var dz=document.getElementById("dz");dz.innerHTML="<img src=\'"+URL.createObjectURL(f)+"\' style=\'width:100%;max-height:240px;object-fit:contain;display:block\'>";dz.classList.add("has");}');
@@ -145,13 +143,13 @@ function getHTML() {
   h.push('try{');
   h.push('var gUrl=garmentUrl;');
   h.push('if(!useUrl){setStep(0);addLog("Upload sur imgbb...");var b64=await toB64(gFile);gUrl=await uploadImgbb(b64,imgbbKey);addLog("Image hebergee");}');
-  h.push('setStep(1);addLog("Virtual try-on... (15-30s)");');
+  h.push('setStep(1);addLog("Try-on en cours... (15-30s)");');
   h.push('var tryonUrl=await callProxy("vto_stream",{api_key:tnbKey,model_photo:modelUrl,clothing_photo:gUrl,prompt:c.vto_prompt,ratio:ratio});');
   h.push('if(!tryonUrl)throw new Error("URL vide du try-on.");');
   h.push('addLog("Try-on termine");document.getElementById("ti").src=tryonUrl;document.getElementById("tl").href=tryonUrl;document.getElementById("tr").style.display="block";');
-  h.push('setStep(2);addLog("Decor "+col+"...");');
-  h.push('var finalUrl=await callProxy("change-background",{api_key:tnbKey,image:tryonUrl,replace:c.bg_prompt,negative:c.bg_negative});');
-  h.push('if(!finalUrl)throw new Error("URL vide du decor.");');
+  h.push('setStep(2);addLog("Integration du fond...");');
+  h.push('var finalUrl=await callProxy("change-background",{api_key:tnbKey,image:tryonUrl,replace:c.bg_url,negative:"people, text, logo, fake, CGI, blurry subject, deformed face"});');
+  h.push('if(!finalUrl)throw new Error("URL vide du fond.");');
   h.push('addLog("Image finale prete");setStep(3);');
   h.push('document.getElementById("fl2").textContent="Image finale - "+col;');
   h.push('document.getElementById("fi2").src=finalUrl;document.getElementById("fl3").href=finalUrl;document.getElementById("fr").style.display="block";');
