@@ -9,23 +9,33 @@ app.use(express.json({ limit: "20mb" }));
 const COLS = {
   "Floraison": {
     bg_url: "https://i.ibb.co/qF3y2k6D/floraison.png",
-    vto_prompt: "elegant plus-size woman wearing the outfit, soft feminine pose, fashion editorial, photorealistic"
+    bg_prompt: "French village courtyard, worn limestone paving stones, weathered grey plaster wall straight ahead, blue painted wooden shuttered door on the right, old iron gate on the left with trees beyond, vintage wall lantern mounted on wall, soft overcast daylight, no people",
+    bg_negative: "people, text, logo, fake, CGI, studio, blurry subject, blurry clothing, blurry fabric, soft focus on person",
+    vto_prompt: "elegant plus-size woman wearing the outfit, standing in the middle of the courtyard, natural distance from the wall behind her, background slightly out of focus with natural depth of field, soft diffused daylight, keep fabric texture and clothing details sharp and unchanged, preserve all garment details strictly, fashion editorial, photorealistic"
   },
   "Mineral": {
     bg_url: "https://i.ibb.co/fYwLGvC5/mineral.png",
-    vto_prompt: "elegant plus-size woman wearing the outfit, natural confident pose, fashion editorial, photorealistic"
+    bg_prompt: "Italian cobblestone street at golden hour, old stone buildings with balconies and terracotta pots on both sides, warm golden light, plants and greenery on balconies, blurred buildings in background, empty street, no people",
+    bg_negative: "people, text, logo, fake, CGI, studio, blurry subject, blurry clothing, blurry fabric, soft focus on person",
+    vto_prompt: "elegant plus-size woman wearing the outfit, standing in the center of the cobblestone street, buildings blurred behind her with natural depth of field, person at distance from buildings on either side, warm golden hour light, keep fabric texture and clothing details sharp and unchanged, preserve all garment details strictly, fashion editorial, photorealistic"
   },
   "Audace": {
     bg_url: "https://i.ibb.co/6RKvgNH9/audace.png",
-    vto_prompt: "confident plus-size woman wearing the outfit, strong editorial pose, fashion photography, photorealistic"
+    bg_prompt: "stone terrace of a Haussmann building, aged limestone balustrade with columns running diagonally left, large terracotta pot with bamboo plant against beige stone wall on right, blurred trees and city buildings in background through the balustrade, overcast soft daylight, worn stone tile floor, no people",
+    bg_negative: "people, text, logo, fake, CGI, studio, blurry subject, blurry clothing, blurry fabric, soft focus on person",
+    vto_prompt: "confident plus-size woman wearing the outfit, standing on the stone terrace, balustrade and city visible behind her at distance, background softly blurred with natural depth of field, space around her, soft overcast light, keep fabric texture and clothing details sharp and unchanged, preserve all garment details strictly, fashion editorial, photorealistic"
   },
   "Crepuscule": {
     bg_url: "https://i.ibb.co/xKHLX1K0/The-New-Black-52.png",
-    vto_prompt: "elegant plus-size woman wearing the outfit, moody editorial pose, fashion photography, photorealistic"
+    bg_prompt: "rooftop wooden deck balcony at twilight, worn wooden floor planks, metal railing in the middle distance, large monstera plant in terracotta pot on the right, small plants on the left, gradient sky from deep blue at top to pink and orange at horizon, no people",
+    bg_negative: "people, text, logo, fake, CGI, studio, blurry subject, blurry clothing, blurry fabric, soft focus on person",
+    vto_prompt: "elegant plus-size woman wearing the outfit, standing on the wooden deck, railing and twilight sky visible behind her, natural distance from the railing, background gently blurred, warm twilight light with cool sky, keep fabric texture and clothing details sharp and unchanged, preserve all garment details strictly, fashion editorial, photorealistic"
   },
   "Riviera": {
     bg_url: "https://i.ibb.co/0RyLcjRw/Design-sans-titre-157.png",
-    vto_prompt: "radiant plus-size woman wearing the outfit, relaxed summery pose, fashion editorial, photorealistic"
+    bg_prompt: "Mediterranean waterfront wooden boardwalk, warm wood plank floor with hard midday sun shadows, metal cable railing along the left leading to the sea, choppy blue Mediterranean sea beyond the railing, white pebble beach below, lone umbrella pine tree on the right, blue sky with light clouds, mountains in the far distance, bright midday light, no people",
+    bg_negative: "people, text, logo, fake, CGI, studio, blurry subject, blurry clothing, blurry fabric, soft focus on person",
+    vto_prompt: "radiant plus-size woman wearing the outfit, standing on the wooden boardwalk, sea and railing visible behind her at distance, natural depth of field with background slightly blurred, bright midday Mediterranean light, space around her, keep fabric texture and clothing details sharp and unchanged, preserve all garment details strictly, fashion editorial, photorealistic"
   }
 };
 
@@ -87,7 +97,7 @@ function getHTML() {
   h.push('.divt{border-top:2px solid #F02B8C;padding-top:14px;margin-top:4px}');
   h.push('.ib{padding:10px 14px;background:#e8f4fd;border-radius:8px;font-size:12px;color:#2980b9;line-height:1.6}');
   h.push('.sb{padding:12px 14px;background:#f8f8f6;border-radius:8px;border:1px solid #eee;margin-bottom:12px}');
-  h.push('.bg-preview{width:100%;height:80px;object-fit:cover;border-radius:8px;display:block;border:1px solid #eee;margin-top:8px}');
+  h.push('.bg-preview{width:100%;height:100px;object-fit:cover;border-radius:8px;display:block;border:1px solid #eee;margin-top:8px}');
   h.push('</style></head><body><div class="app">');
   h.push('<div><h1>Pipeline visuel</h1><span class="brand">L indisciplinee</span></div>');
   h.push('<div class="tabs"><button class="tab active" onclick="showTab(\'p\')">Pipeline</button><button class="tab" onclick="showTab(\'s\')">Parametres</button></div>');
@@ -148,7 +158,7 @@ function getHTML() {
   h.push('if(!tryonUrl)throw new Error("URL vide du try-on.");');
   h.push('addLog("Try-on termine");document.getElementById("ti").src=tryonUrl;document.getElementById("tl").href=tryonUrl;document.getElementById("tr").style.display="block";');
   h.push('setStep(2);addLog("Integration du fond...");');
-  h.push('var finalUrl=await callProxy("change-background",{api_key:tnbKey,image:tryonUrl,replace:c.bg_url,negative:"people, text, logo, fake, CGI, blurry subject, deformed face"});');
+  h.push('var finalUrl=await callProxy("change-background",{api_key:tnbKey,image:tryonUrl,replace:c.bg_prompt,negative:c.bg_negative});');
   h.push('if(!finalUrl)throw new Error("URL vide du fond.");');
   h.push('addLog("Image finale prete");setStep(3);');
   h.push('document.getElementById("fl2").textContent="Image finale - "+col;');
